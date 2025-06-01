@@ -1,0 +1,543 @@
+/* 基本重置 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Header */
+header {
+    background: #2c3e50;
+    color: #fff;
+    padding: 1rem 0;
+    border-bottom: 3px solid #007bff;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header h1 a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.8rem;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    color: #fff;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover {
+    color: #007bff;
+}
+
+/* Main Content */
+main {
+    padding: 2rem 0;
+}
+
+/* Page sections for dynamic display */
+.page-section {
+    display: none; /* 預設隱藏所有頁面區塊 */
+}
+
+.page-section.active {
+    display: block; /* 顯示當前活躍的頁面區塊 */
+}
+
+/* Hero Section (首頁歡迎區) */
+.hero {
+    background: #e9ecef;
+    padding: 3rem 2rem;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.hero h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+}
+
+.hero p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: #555;
+}
+
+.search-filter {
+    display: flex;
+    flex-wrap: wrap; /* 讓篩選器在小螢幕上換行 */
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1.5rem;
+}
+
+.search-filter input[type="text"],
+.search-filter select {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 200px; /* 調整寬度以適應更多篩選器 */
+}
+
+.search-filter button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.search-filter button:hover {
+    background: #0056b3;
+}
+
+
+/* Animal List (動物卡片列表) */
+.animal-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.animal-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.animal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.animal-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.animal-card-content {
+    padding: 15px;
+}
+
+.animal-card-content h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-size: 1.5rem;
+}
+
+.animal-card-content p {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.animal-card-content .btn-detail {
+    display: inline-block;
+    background: #28a745;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.animal-card-content .btn-detail:hover {
+    background: #218838;
+}
+
+/* Animal Detail Page (動物詳細頁面) */
+.animal-detail-section {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.animal-detail-section h2 {
+    color: #2c3e50;
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.animal-detail-content {
+    display: flex;
+    flex-wrap: wrap; /* 讓內容在小螢幕上換行 */
+    gap: 30px;
+}
+
+.animal-detail-images {
+    flex: 1;
+    min-width: 300px; /* 確保圖片區塊有最小寬度 */
+    max-width: 50%; /* 在大螢幕上佔一半寬度 */
+    position: relative; /* 為了輪播控制按鈕定位 */
+}
+
+/* 圖片輪播器基礎樣式 */
+.image-carousel {
+    position: relative;
+    width: 100%;
+    height: 350px; /* 範例高度，可調整 */
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.carousel-image.active {
+    opacity: 1;
+}
+
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    z-index: 10;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-control.prev {
+    left: 10px;
+}
+
+.carousel-control.next {
+    right: 10px;
+}
+
+
+.animal-info {
+    flex: 1;
+    min-width: 300px;
+    max-width: 45%;
+}
+
+.animal-info p {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    color: #444;
+}
+
+.animal-info p strong {
+    color: #2c3e50;
+    margin-right: 5px;
+}
+
+.animal-info .description {
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.animal-info .description h3 {
+    margin-top: 0;
+    color: #007bff;
+}
+
+.btn-apply {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: #007bff;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    margin-top: 30px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-apply:hover {
+    background: #0056b3;
+}
+
+.btn-apply.adopted {
+    background: #6c757d; /* 灰色 */
+    cursor: not-allowed;
+}
+
+
+/* Apply Form Page (領養申請表單) & Upload Form Page */
+.apply-form-section, .upload-form-section {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.apply-form-section h2, .upload-form-section h2 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="tel"],
+.form-group input[type="email"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box; /* 確保 padding 不增加寬度 */
+}
+
+.form-group textarea {
+    resize: vertical; /* 允許垂直調整大小 */
+}
+
+.form-group small {
+    font-size: 0.85rem;
+    color: #777;
+    margin-top: 5px;
+    display: block;
+}
+
+.form-group input[type="file"] {
+    padding: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.file-upload-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.file-upload-preview img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    background-color: #f3f3f3;
+    border-radius: 5px;
+    margin-top: 10px;
+    display: none; /* Initially hidden */
+}
+
+.progress-bar {
+    width: 0%;
+    height: 20px;
+    background-color: #4CAF50;
+    text-align: center;
+    color: white;
+    border-radius: 5px;
+    line-height: 20px;
+    font-size: 0.8em;
+}
+
+
+.btn-submit {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px; /* 與返回按鈕的間距 */
+}
+
+.btn-submit:hover {
+    background: #218838;
+}
+
+.btn-back {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: #6c757d; /* 返回按鈕的顏色 */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+    background: #5a6268;
+}
+
+/* Footer */
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    header nav ul {
+        margin-top: 15px;
+        flex-wrap: wrap; /* 導覽列項目在小螢幕換行 */
+        justify-content: center;
+    }
+
+    header nav ul li {
+        margin: 0 10px 10px 10px;
+    }
+
+    .hero {
+        padding: 2rem 1rem;
+    }
+
+    .search-filter {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .search-filter input[type="text"],
+    .search-filter select,
+    .search-filter button {
+        width: 100%;
+        max-width: 300px; /* 限制在小螢幕上的最大寬度 */
+    }
+
+    .animal-card {
+        max-width: 90%; /* 小螢幕上卡片佔大部分寬度 */
+        margin: 0 auto;
+    }
+
+    .animal-detail-content {
+        flex-direction: column;
+    }
+
+    .animal-detail-images,
+    .animal-info {
+        max-width: 100%;
+        min-width: unset; /* 取消最小寬度限制 */
+    }
+    .image-carousel {
+        height: 250px; /* 小螢幕上調整高度 */
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 a {
+        font-size: 1.5rem;
+    }
+
+    .hero h2 {
+        font-size: 2rem;
+    }
+
+    .animal-card-content h3 {
+        font-size: 1.3rem;
+    }
+
+    .animal-detail-section h2 {
+        font-size: 1.8rem;
+    }
+
+    .animal-info p, .animal-info .description {
+        font-size: 1rem;
+    }
+}
