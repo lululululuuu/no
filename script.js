@@ -1,21 +1,25 @@
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, where } from "firebase/firestore";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getAnalytics } from "firebase/analytics";
+
 // Firebase 配置
-// For Firebase JS SDK v7.20.0 and later, measurementld is optional
 const firebaseConfig = {
     apiKey: "AIzaSyCIWSLwyUCEkKGz4bne2leVHIbm7EFpObg",
     authDomain: "yuuu-52269.firebaseapp.com",
     databaseURL: "https://yuuu-52269-default-rtdb.firebaseio.com",
     projectId: "yuuu-52269",
-    storageBucket: "yuuu-52269.appspot.com", // <-- **請務必確認這個值是否為您 Firebase 專案的 .appspot.com 網址**
+    storageBucket: "yuuu-52269.appspot.com",
     messagingSenderId: "208020331487",
     appId: "1:208020331487:web:dc207529c8378a5c9d826a",
     measurementId: "G-PDS03JGPRR"
 };
 
-
 // 初始化 Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const storage = firebase.storage();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+const analytics = getAnalytics(app);
 
 // 頁面元素獲取
 const homePage = document.getElementById('homePage');
@@ -26,6 +30,10 @@ const uploadAnimalPage = document.getElementById('uploadAnimalPage');
 const homeLink = document.getElementById('homeLink');
 const navHome = document.getElementById('navHome');
 const navUploadAnimal = document.getElementById('navUploadAnimal');
+const navAbout = document.querySelector('a[href="#about"]');
+const navContact = document.querySelector('a[href="#contact"]');
+const backFromAboutBtn = document.getElementById('backFromAboutBtn');
+const backFromContactBtn = document.getElementById('backFromContactBtn');
 
 const animalListElement = document.getElementById('animalList');
 const searchInput = document.getElementById('searchInput');
@@ -41,14 +49,9 @@ const animalNameInput = document.getElementById('animalName');
 const applyFormTitle = document.getElementById('applyFormTitle');
 const backToDetailBtn = document.getElementById('backToDetailBtn');
 
-// 上傳動物表單元素
+// 上傳動物表單元素 (移除圖片相關元素)
 const uploadAnimalForm = document.getElementById('uploadAnimalForm');
-const animalImagesInput = document.getElementById('animalImages');
-const imagePreview = document.getElementById('imagePreview');
-const progressBarContainer = document.getElementById('progressBarContainer');
-const progressBar = document.getElementById('progressBar');
 const backFromUploadBtn = document.getElementById('backFromUploadBtn');
-
 
 let currentAnimalId = null; // 用於儲存當前查看的動物ID
 let currentAnimalName = null; // 用於儲存當前查看的動物名稱
@@ -67,26 +70,29 @@ function showPage(pageId, data = null) {
         setupApplyForm(data.id, data.name);
     } else if (pageId === 'homePage') {
         fetchAnimals(); // 回到首頁時重新載入動物列表
+    } else if (pageId === 'uploadAnimalPage') {
+        uploadAnimalForm.reset(); // 清空上傳表單
     }
 }
 
 // --- 首頁 (動物列表) 邏輯 ---
 async function fetchAnimals(searchTerm = '', species = '', ageGroup = '', gender = '') {
     animalListElement.innerHTML = '<p>載入中，請稍候...</p>';
-    let query = db.collection('animals').where('isAdopted', '==', false); // 只顯示未被領養的
+    let query = collection(db, 'animals');
+    query = where(query, 'isAdopted', '==', false);
 
     if (species) {
-        query = query.where('species', '==', species);
+        query = where(query, 'species', '==', species);
     }
     if (gender) {
-        query = query.where('gender', '==', gender);
+        query = where(query, 'gender', '==', gender);
     }
 
     try {
-        const snapshot = await query.get();
+        const snapshot = await getDocs(query);
         let animals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-        // 前端篩選年齡組 (因為Firestore不能直接進行OR查詢或複雜範圍查詢，這裡前端處理)
+        // 前端篩選年齡組
         if (ageGroup) {
             animals = animals.filter(animal => {
                 if (ageGroup === 'young') return animal.age >= 0 && animal.age <= 1;
@@ -125,9 +131,7 @@ function displayAnimals(animals) {
         const card = document.createElement('div');
         card.classList.add('animal-card');
 
-        const imageUrl = animal.imageUrls && animal.imageUrls.length > 0
-            ? animal.imageUrls[0]
-            : './images/default-animal.jpg'; // 注意這裡的路徑
+        const imageUrl = './images/default-animal.jpg'; // 預設圖片路徑
 
         card.innerHTML = `
             <img src="${imageUrl}" alt="${animal.name}">
@@ -141,17 +145,16 @@ function displayAnimals(animals) {
         animalListElement.appendChild(card);
     });
 
-    // 為所有新生成的 "查看詳情" 按鈕添加事件監聽器
     document.querySelectorAll('.btn-detail').forEach(button => {
         button.addEventListener('click', async (e) => {
             const id = e.target.dataset.animalId;
             try {
-                const docRef = db.collection('animals').doc(id);
-                const doc = await docRef.get();
-                if (doc.exists) {
-                    currentAnimalId = doc.id;
-                    currentAnimalName = doc.data().name;
-                    showPage('animalDetailPage', { id: doc.id, ...doc.data() });
+                const docRef = doc(db, 'animals', id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    currentAnimalId = docSnap.id;
+                    currentAnimalName = docSnap.data().name;
+                    showPage('animalDetailPage', { id: docSnap.id, ...docSnap.data() });
                 } else {
                     alert('查無此動物資訊。');
                 }
@@ -163,7 +166,6 @@ function displayAnimals(animals) {
     });
 }
 
-// 統一處理搜尋和篩選事件
 const applyFilters = () => {
     const searchTerm = searchInput.value.trim();
     const selectedSpecies = speciesFilter.value;
@@ -180,22 +182,7 @@ searchInput.addEventListener('input', applyFilters);
 
 // --- 動物詳細頁面邏輯 ---
 function displayAnimalDetail(animal) {
-    let imageHtml = '';
-    if (animal.imageUrls && animal.imageUrls.length > 0) {
-        imageHtml = `
-            <div class="image-carousel">
-                ${animal.imageUrls.map((url, index) =>
-                    `<img src="${url}" alt="${animal.name} - ${index + 1}" class="carousel-image ${index === 0 ? 'active' : ''}">`
-                ).join('')}
-                ${animal.imageUrls.length > 1 ? `
-                    <button class="carousel-control prev">&#10094;</button>
-                    <button class="carousel-control next">&#10095;</button>
-                ` : ''}
-            </div>
-        `;
-    } else {
-        imageHtml = `<img src="https://via.placeholder.com/350x200?text=No+Image" alt="${animal.name}">`; // 使用 placeholder
-    }
+    let imageHtml = `<img src="./images/default-animal.jpg" alt="${animal.name}">`;
 
     const applyButtonHtml = animal.isAdopted
         ? `<button class="btn-apply adopted" disabled>已領養</button>`
@@ -224,11 +211,6 @@ function displayAnimalDetail(animal) {
         </div>
     `;
 
-    if (animal.imageUrls && animal.imageUrls.length > 1) {
-        initImageCarousel();
-    }
-
-    // 為領養按鈕添加事件監聽器
     const applyBtn = document.getElementById('applyBtn');
     if (applyBtn && !applyBtn.disabled) {
         applyBtn.addEventListener('click', (e) => {
@@ -237,39 +219,6 @@ function displayAnimalDetail(animal) {
             showPage('applyFormPage', { id: id, name: name });
         });
     }
-}
-
-// 圖片輪播功能
-function initImageCarousel() {
-    const images = document.querySelectorAll('.carousel-image');
-    const prevBtn = document.querySelector('.carousel-control.prev');
-    const nextBtn = document.querySelector('.carousel-control.next');
-    let currentIndex = 0;
-
-    function showImage(index) {
-        images.forEach((img, i) => {
-            img.classList.remove('active');
-            if (i === index) {
-                img.classList.add('active');
-            }
-        });
-    }
-
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
-            showImage(currentIndex);
-        });
-    }
-
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % images.length;
-            showImage(currentIndex);
-        });
-    }
-
-    showImage(currentIndex);
 }
 
 // --- 領養申請表單邏輯 ---
@@ -302,7 +251,7 @@ adoptionForm.addEventListener('submit', async (e) => {
     }
 
     try {
-        await db.collection('applications').add({
+        await addDoc(collection(db, 'applications'), {
             animalId: animalIdInput.value,
             animalName: animalNameInput.value,
             applicantName: applicantName,
@@ -312,61 +261,26 @@ adoptionForm.addEventListener('submit', async (e) => {
             experience: experience,
             motivation: motivation,
             notes: notes,
-            status: 'pending',
-            submittedAt: firebase.firestore.FieldValue.serverTimestamp()
+            appliedAt: new Date()
         });
-
-        alert('領養申請已成功送出！我們將盡快與您聯繫。');
+        alert('領養申請已送出，我們會盡快與您聯繫。');
         adoptionForm.reset();
-        showPage('homePage');
+        showPage('homePage'); // 送出後返回首頁
     } catch (error) {
         console.error("Error submitting application: ", error);
-        alert('申請提交失敗，請稍後再試。');
+        alert('送出申請時發生錯誤，請稍後再試。');
     }
 });
 
-// 返回動物資訊按鈕 (領養表單)
 backToDetailBtn.addEventListener('click', () => {
-    if (currentAnimalId) {
-        db.collection('animals').doc(currentAnimalId).get().then(doc => {
-            if (doc.exists) {
-                showPage('animalDetailPage', { id: doc.id, ...doc.data() });
-            } else {
-                alert('動物資料已不存在，返回首頁。');
-                showPage('homePage');
-            }
-        }).catch(error => {
-            console.error("Error fetching animal for back button: ", error);
-            alert('載入動物資料失敗，返回首頁。');
-            showPage('homePage');
-        });
+    if (currentAnimalId && currentAnimalName) {
+        showPage('animalDetailPage', { id: currentAnimalId, name: currentAnimalName });
     } else {
         showPage('homePage');
     }
 });
 
-
 // --- 上傳動物資料邏輯 ---
-animalImagesInput.addEventListener('change', (event) => {
-    imagePreview.innerHTML = ''; // 清空預覽
-    progressBarContainer.style.display = 'none'; // 隱藏進度條
-
-    const files = event.target.files;
-    if (files.length === 0) return;
-
-    Array.from(files).forEach(file => {
-        if (file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                imagePreview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-});
-
 uploadAnimalForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -379,127 +293,74 @@ uploadAnimalForm.addEventListener('submit', async (e) => {
     const healthStatus = document.getElementById('uploadAnimalHealthStatus').value;
     const personality = document.getElementById('uploadAnimalPersonality').value;
     const description = document.getElementById('uploadAnimalDescription').value;
-    const files = animalImagesInput.files;
 
     if (!name || isNaN(age) || !species || !gender || !personality) {
-        alert('請填寫所有必填欄位 (名稱、年齡、種類、性別、個性描述)。');
+        alert('請填寫所有必填欄位。');
         return;
     }
-
-    if (files.length === 0) {
-        alert('請至少上傳一張動物圖片。');
-        return;
-    }
-
-    const imageUrls = [];
-    progressBarContainer.style.display = 'block';
-    progressBar.style.width = '0%';
-    progressBar.textContent = '0%';
 
     try {
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            // 使用獨特的檔名，例如：timestamp_originalfilename
-            const uniqueFileName = `${Date.now()}_${file.name}`;
-            const storageRef = storage.ref(`animal_images/${uniqueFileName}`);
-            const uploadTask = storageRef.put(file);
-
-            await new Promise((resolve, reject) => {
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        progressBar.style.width = `${progress}%`;
-                        progressBar.textContent = `${Math.round(progress)}%`;
-                    },
-                    (error) => {
-                        console.error("圖片上傳失敗: ", error);
-                        reject(error);
-                    },
-                    async () => {
-                        const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-                        imageUrls.push(downloadURL);
-                        resolve();
-                    }
-                );
-            });
-        }
-
-        // 所有圖片上傳完成後，儲存動物資料到 Firestore
-        await db.collection('animals').add({
+        await addDoc(collection(db, 'animals'), {
             name: name,
             age: age,
             species: species,
-            breed: breed || '未提供',
+            breed: breed || '',
             gender: gender,
-            size: size || '未提供',
-            healthStatus: healthStatus || '良好',
+            size: size || '',
+            healthStatus: healthStatus || '',
             personality: personality,
-            description: description || '暫無詳細介紹。',
-            imageUrls: imageUrls,
-            isAdopted: false, // 預設為未領養
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            description: description || '',
+            isAdopted: false,
+            uploadedAt: new Date()
         });
-
-        alert('動物資料已成功上傳！');
+        alert('動物資料上傳成功！');
         uploadAnimalForm.reset();
-        imagePreview.innerHTML = ''; // 清空預覽
-        progressBarContainer.style.display = 'none'; // 隱藏進度條
-        showPage('homePage'); // 導回首頁
+        showPage('homePage'); // 上傳成功後返回首頁
     } catch (error) {
-        console.error("提交動物資料失敗: ", error);
-        alert('提交動物資料失敗，請檢查網路或稍後再試。');
-        progressBarContainer.style.display = 'none'; // 隱藏進度條
+        console.error("Error adding animal: ", error);
+        alert('上傳動物資料時發生錯誤，請稍後再試。');
     }
 });
 
-// 返回首頁按鈕 (上傳表單)
 backFromUploadBtn.addEventListener('click', () => {
     showPage('homePage');
-    uploadAnimalForm.reset(); // 清空表單
-    imagePreview.innerHTML = ''; // 清空預覽
-    progressBarContainer.style.display = 'none'; // 隱藏進度條
 });
 
-
-// --- 初始載入與導航事件 ---
+// --- 導航連結事件 ---
 document.addEventListener('DOMContentLoaded', () => {
-    // 初始載入首頁內容
-    fetchAnimals();
+    fetchAnimals(); // 初始載入動物列表
+    showPage('homePage'); // 預設顯示首頁
 
-    // 導航連結事件
     homeLink.addEventListener('click', (e) => {
         e.preventDefault();
         showPage('homePage');
     });
+
     navHome.addEventListener('click', (e) => {
         e.preventDefault();
         showPage('homePage');
     });
-    navUploadAnimal.addEventListener('click', (e) => { // 新增上傳動物連結事件
+
+    navUploadAnimal.addEventListener('click', (e) => {
         e.preventDefault();
         showPage('uploadAnimalPage');
     });
 
-    // 如果頁面是從URL帶參數直接開啟，則處理
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialAnimalId = urlParams.get('id');
+    navAbout.addEventListener('click', (e) => {
+        e.preventDefault();
+        showPage('about');
+    });
 
-    if (initialAnimalId) {
-        db.collection('animals').doc(initialAnimalId).get().then(doc => {
-            if (doc.exists) {
-                currentAnimalId = doc.id;
-                currentAnimalName = doc.data().name;
-                showPage('animalDetailPage', { id: doc.id, ...doc.data() });
-            } else {
-                alert('URL中指定的動物不存在，返回首頁。');
-                showPage('homePage');
-            }
-        }).catch(error => {
-            console.error("Error loading animal from URL: ", error);
-            alert('載入動物資料失敗，返回首頁。');
-            showPage('homePage');
-        });
-    } else {
-        showPage('homePage'); // 預設顯示首頁
-    }
+    navContact.addEventListener('click', (e) => {
+        e.preventDefault();
+        showPage('contact');
+    });
+
+    backFromAboutBtn.addEventListener('click', () => {
+        showPage('homePage');
+    });
+
+    backFromContactBtn.addEventListener('click', () => {
+        showPage('homePage');
+    });
 });
