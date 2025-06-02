@@ -158,12 +158,64 @@ main {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
+/* 新增的關於我們和聯絡我們頁面樣式 */
+.info-section {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
 
+.info-section h2 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.info-section p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.info-section ul {
+    list-style: disc;
+    margin-left: 25px;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.info-section ul li {
+    margin-bottom: 8px;
+    font-size: 1.05rem;
+}
+
+.info-section h3 {
+    color: #007bff;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+}
+
+.info-section .social-links a {
+    margin-right: 15px;
+    font-size: 1.1rem;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.info-section .social-links a:hover {
+    text-decoration: underline;
+}
+
+/* 這裡修改：隱藏首頁動物卡片的圖片 */
 .animal-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    display: block;
+    display: none; 
+    height: 0;   
+    width: 0;    
 }
 
 .animal-card-content {
@@ -218,71 +270,19 @@ main {
     gap: 30px;
 }
 
+/* 這裡修改：移除動物圖片區塊 */
 .animal-detail-images {
-    flex: 1;
-    min-width: 300px; /* 確保圖片區塊有最小寬度 */
-    max-width: 50%; /* 在大螢幕上佔一半寬度 */
-    position: relative; /* 為了輪播控制按鈕定位 */
+    display: none; /* 這會完全隱藏圖片及其佔用的空間 */
 }
 
-/* 圖片輪播器基礎樣式 */
-.image-carousel {
-    position: relative;
-    width: 100%;
-    height: 350px; /* 範例高度，可調整 */
-    overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.carousel-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.carousel-image.active {
-    opacity: 1;
-}
-
-.carousel-control {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 1.5rem;
-    z-index: 10;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.carousel-control.prev {
-    left: 10px;
-}
-
-.carousel-control.next {
-    right: 10px;
-}
-
-
+/* 由於圖片區塊被隱藏，資訊區塊可能需要調整寬度 */
+/* 讓 animal-info 佔滿整個容器 */
 .animal-info {
-    flex: 1;
-    min-width: 300px;
-    max-width: 45%;
+    flex: 1; /* 讓它填滿可用空間 */
+    min-width: 100%; /* 在大螢幕上也讓它佔滿 100% 寬度 */
+    max-width: 100%; /* 確保它不會超過 100% */
 }
+
 
 .animal-info p {
     margin-bottom: 10px;
@@ -375,13 +375,8 @@ main {
     resize: vertical; /* 允許垂直調整大小 */
 }
 
-.form-group small {
-    font-size: 0.85rem;
-    color: #777;
-    margin-top: 5px;
-    display: block;
-}
-
+/* 移除以下關於圖片上傳預覽和進度條的 CSS 規則 */
+/*
 .form-group input[type="file"] {
     padding: 8px 0;
     border: 1px solid #ddd;
@@ -409,7 +404,7 @@ main {
     background-color: #f3f3f3;
     border-radius: 5px;
     margin-top: 10px;
-    display: none; /* Initially hidden */
+    display: none;
 }
 
 .progress-bar {
@@ -422,6 +417,7 @@ main {
     line-height: 20px;
     font-size: 0.8em;
 }
+*/
 
 
 .btn-submit {
@@ -510,13 +506,16 @@ footer {
         flex-direction: column;
     }
 
-    .animal-detail-images,
+    /* 確保在小螢幕下，資訊區塊仍然佔滿 */
     .animal-info {
         max-width: 100%;
         min-width: unset; /* 取消最小寬度限制 */
     }
+    
+    /* 輪播器已移除，所以這段也無效，但保留以防未來需要類似元素 */
     .image-carousel {
-        height: 250px; /* 小螢幕上調整高度 */
+        height: 0; /* 小螢幕上調整高度 */
+        display: none;
     }
 }
 
