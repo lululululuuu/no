@@ -1,177 +1,228 @@
-<header>
-    <div class="container">
-        <h1><a href="#" id="homeLink">動物認領平台</a></h1>
-        <nav>
-            <ul>
-                <li><a href="#" id="navHome">首頁</a></li>
-                <li><a href="#about">關於我們</a></li>
-                <li><a href="#contact">聯絡我們</a></li>
-                <li><a href="#" id="navUploadAnimal">上傳動物資料</a></li>
-            </ul>
-        </nav>
-    </div>
-</header>
+<!DOCTYPE html>
+<html>
 
-<main class="container">
-    <section id="homePage" class="page-section active">
-        <div class="hero">
-            <h2>尋找您的新家人</h2>
-            <p>瀏覽待領養的可愛動物，給牠們一個溫暖的家。</p>
-            <div class="search-filter">
-                <input type="text" id="searchInput" placeholder="依名稱或關鍵字搜尋...">
-                <select id="speciesFilter">
-                    <option value="">所有種類</option>
-                    <option value="狗">狗</option>
-                    <option value="貓">貓</option>
-                    <option value="兔子">兔子</option>
-                    <option value="鳥">鳥</option>
-                    <option value="其他">其他</option>
-                </select>
-                <select id="ageFilter">
-                    <option value="">所有年齡</option>
-                    <option value="young">幼年 (0-1歲)</option>
-                    <option value="adult">成年 (1-7歲)</option>
-                    <option value="senior">老年 (7歲以上)</option>
-                </select>
-                <select id="genderFilter">
-                    <option value="">所有性別</option>
-                    <option value="公">公</option>
-                    <option value="母">母</option>
-                </select>
-                <button id="searchButton">搜尋/篩選</button>
-            </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>動物認領平台</title>
+    <link rel="stylesheet" href="/no/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="#" id="homeLink">動物認領平台</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="#" id="navHome">首頁</a></li>
+                    <li><a href="#about">關於我們</a></li>
+                    <li><a href="#contact">聯絡我們</a></li>
+                    <li><a href="#" id="navUploadAnimal">上傳動物資料</a></li>
+                </ul>
+            </nav>
         </div>
+    </header>
 
-        <div class="animal-list" id="animalList">
-            <p>載入中，請稍候...</p>
-        </div>
-    </section>
-
-    <section id="animalDetailPage" class="page-section">
-        <div class="animal-detail-section" id="animalDetailContent">
-            <p>載入中，請稍候...</p>
-        </div>
-    </section>
-
-    <section id="applyFormPage" class="page-section">
-        <div class="apply-form-section">
-            <h2 id="applyFormTitle">領養申請表</h2>
-            <form id="adoptionForm">
-                <input type="hidden" id="animalId" name="animalId">
-                <input type="hidden" id="animalName" name="animalName">
-
-                <div class="form-group">
-                    <label for="applicantName">申請人姓名：</label>
-                    <input type="text" id="applicantName" name="applicantName" required>
-                </div>
-                <div class="form-group">
-                    <label for="phone">聯絡電話：</label>
-                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" title="請輸入10位數字的電話號碼" required>
-                    <small>格式: 0912345678</small>
-                </div>
-                <div class="form-group">
-                    <label for="email">電子郵件：</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="address">居住地址：</label>
-                    <textarea id="address" name="address" rows="3" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="experience">飼養經驗：</label>
-                    <textarea id="experience" name="experience" rows="5" placeholder="請描述您的飼養經驗，例如：是否有飼養過寵物、飼養多久等" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="motivation">領養動機：</label>
-                    <textarea id="motivation" name="motivation" rows="5" placeholder="請說明您想領養這隻動物的原因和您對牠的承諾" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="notes">其他備註 (選填)：</label>
-                    <textarea id="notes" name="notes" rows="3"></textarea>
-                </div>
-
-                <button type="submit" class="btn-submit">送出申請</button>
-                <button type="button" class="btn-back" id="backToDetailBtn">返回動物資訊</button>
-            </form>
-        </div>
-    </section>
-
-    <section id="uploadAnimalPage" class="page-section">
-        <div class="upload-form-section">
-            <h2>上傳待認養動物資料</h2>
-            <form id="uploadAnimalForm">
-                <div class="form-group">
-                    <label for="uploadAnimalName">動物名稱：</label>
-                    <input type="text" id="uploadAnimalName" required>
-                </div>
-                <div class="form-group">
-                    <label for="uploadAnimalAge">年齡 (歲)：</label>
-                    <input type="number" id="uploadAnimalAge" min="0" step="0.1" required>
-                </div>
-                <div class="form-group">
-                    <label for="uploadAnimalSpecies">種類：</label>
-                    <select id="uploadAnimalSpecies" required>
-                        <option value="">請選擇</option>
+    <main class="container">
+        <section id="homePage" class="page-section active">
+            <div class="hero">
+                <h2>尋找您的新家人</h2>
+                <p>瀏覽待領養的可愛動物，給牠們一個溫暖的家。</p>
+                <div class="search-filter">
+                    <input type="text" id="searchInput" placeholder="依名稱或關鍵字搜尋...">
+                    <select id="speciesFilter">
+                        <option value="">所有種類</option>
                         <option value="狗">狗</option>
                         <option value="貓">貓</option>
                         <option value="兔子">兔子</option>
                         <option value="鳥">鳥</option>
                         <option value="其他">其他</option>
                     </select>
-                </div>
-                <div class="form-group">
-                    <label for="uploadAnimalBreed">品種：</label>
-                    <input type="text" id="uploadAnimalBreed">
-                </div>
-                <div class="form-group">
-                    <label for="uploadAnimalGender">性別：</label>
-                    <select id="uploadAnimalGender" required>
-                        <option value="">請選擇</option>
+                    <select id="ageFilter">
+                        <option value="">所有年齡</option>
+                        <option value="young">幼年 (0-1歲)</option>
+                        <option value="adult">成年 (1-7歲)</option>
+                        <option value="senior">老年 (7歲以上)</option>
+                    </select>
+                    <select id="genderFilter">
+                        <option value="">所有性別</option>
                         <option value="公">公</option>
                         <option value="母">母</option>
-                        <option value="未知">未知</option>
                     </select>
+                    <button id="searchButton">搜尋/篩選</button>
                 </div>
-                <div class="form-group">
-                    <label for="uploadAnimalSize">體型：</label>
-                    <select id="uploadAnimalSize">
-                        <option value="">請選擇</option>
-                        <option value="小型">小型</option>
-                        <option value="中型">中型</option>
-                        <option value="大型">大型</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="uploadAnimalHealthStatus">健康狀況：</label>
-                    <textarea id="uploadAnimalHealthStatus" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="uploadAnimalPersonality">個性描述：</label>
-                    <textarea id="uploadAnimalPersonality" rows="5" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="uploadAnimalDescription">詳細介紹：</label>
-                    <textarea id="uploadAnimalDescription" rows="5"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="animalImages">上傳圖片 (可多選)：</label>
-                    <input type="file" id="animalImages" accept="image/*" multiple>
-                    <div class="file-upload-preview" id="imagePreview"></div>
-                    <div class="progress-bar-container" id="progressBarContainer">
-                        <div class="progress-bar" id="progressBar">0%</div>
-                    </div>
-                </div>
+            </div>
 
-                <button type="submit" class="btn-submit">提交動物資料</button>
-                <button type="button" class="btn-back" id="backFromUploadBtn">返回首頁</button>
-            </form>
+            <div class="animal-list" id="animalList">
+                <p>載入中，請稍候...</p>
+            </div>
+        </section>
+
+        <section id="animalDetailPage" class="page-section">
+            <div class="animal-detail-section" id="animalDetailContent">
+                <p>載入中，請稍候...</p>
+            </div>
+        </section>
+
+        <section id="applyFormPage" class="page-section">
+            <div class="apply-form-section">
+                <h2 id="applyFormTitle">領養申請表</h2>
+                <form id="adoptionForm">
+                    <input type="hidden" id="animalId" name="animalId">
+                    <input type="hidden" id="animalName" name="animalName">
+
+                    <div class="form-group">
+                        <label for="applicantName">申請人姓名：</label>
+                        <input type="text" id="applicantName" name="applicantName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">聯絡電話：</label>
+                        <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" title="請輸入10位數字的電話號碼" required>
+                        <small>格式: 0912345678</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">電子郵件：</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">居住地址：</label>
+                        <textarea id="address" name="address" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="experience">飼養經驗：</label>
+                        <textarea id="experience" name="experience" rows="5" placeholder="請描述您的飼養經驗，例如：是否有飼養過寵物、飼養多久等"
+                            required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="motivation">領養動機：</label>
+                        <textarea id="motivation" name="motivation" rows="5" placeholder="請說明您想領養這隻動物的原因和您對牠的承諾"
+                            required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">其他備註 (選填)：</label>
+                        <textarea id="notes" name="notes" rows="3"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit">送出申請</button>
+                    <button type="button" class="btn-back" id="backToDetailBtn">返回動物資訊</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="uploadAnimalPage" class="page-section">
+            <div class="upload-form-section">
+                <h2>上傳待認養動物資料</h2>
+                <form id="uploadAnimalForm">
+                    <div class="form-group">
+                        <label for="uploadAnimalName">動物名稱：</label>
+                        <input type="text" id="uploadAnimalName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadAnimalAge">年齡 (歲)：</label>
+                        <input type="number" id="uploadAnimalAge" min="0" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadAnimalSpecies">種類：</label>
+                        <select id="uploadAnimalSpecies" required>
+                            <option value="">請選擇</option>
+                            <option value="狗">狗</option>
+                            <option value="貓">貓</option>
+                            <option value="兔子">兔子</option>
+                            <option value="鳥">鳥</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadAnimalBreed">品種：</label>
+                        <input type="text" id="uploadAnimalBreed">
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadAnimalGender">性別：</label>
+                        <select id="uploadAnimalGender" required>
+                            <option value="">請選擇</option>
+                            <option value="公">公</option>
+                            <option value="母">母</option>
+                            <option value="未知">未知</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadAnimalSize">體型：</label>
+                        <select id="uploadAnimalSize">
+                            <option value="">請選擇</option>
+                            <option value="小型">小型</option>
+                            <option value="中型">中型</option>
+                            <option value="大型">大型</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadAnimalHealthStatus">健康狀況：</label>
+                        <textarea id="uploadAnimalHealthStatus" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadAnimalPersonality">個性描述：</label>
+                        <textarea id="uploadAnimalPersonality" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadAnimalDescription">詳細介紹：</label>
+                        <textarea id="uploadAnimalDescription" rows="5"></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">提交動物資料</button>
+                    <button type="button" class="btn-back" id="backFromUploadBtn">返回首頁</button>
+                </form>
+            </div>
+        </section>
+<main class="container">
+    <section id="about" class="page-section">
+        <div class="info-section">
+            <h2>關於我們</h2>
+            <p>歡迎來到動物認領平台！我們致力於為流浪動物和需要家的家庭搭建橋樑。我們的目標是讓每一隻可愛的動物都能找到一個溫暖、充滿愛的永久家園。</p>
+            <p>我們相信，領養是給予動物第二次生命的機會，也是豐富您生活的最佳方式。透過我們的平台，您可以輕鬆瀏覽各種待認養的貓、狗、兔子、鳥類及其他小動物，了解牠們的故事和個性。</p>
+            <p>我們的團隊由一群熱愛動物的志工組成，我們與各地的動物收容所和中途之家緊密合作，確保每一隻上架的動物都經過健康檢查和初步評估。我們也提供領養申請的引導，確保領養過程順利且負責。</p>
+            <h3>我們的使命</h3>
+            <ul>
+                <li>提高動物領養的意識，鼓勵以領養代替購買。</li>
+                <li>為待領養動物提供一個廣闊的曝光平台。</li>
+                <li>協助潛在領養人找到最適合他們生活方式的伴侶動物。</li>
+                <li>促進負責任的寵物飼養，提供相關教育資源。</li>
+            </ul>
+            <p>感謝您的參與，您的一小步，可能是牠們生命中的一大步。</p>
+            <button type="button" class="btn-back" id="backFromAboutBtn">返回首頁</button>
+        </div>
+    </section>
+
+    <section id="contact" class="page-section">
+        <div class="info-section">
+            <h2>聯絡我們</h2>
+            <p>如果您對動物領養有任何疑問，或是想提供幫助，歡迎隨時與我們聯繫！</p>
+            <p>您可以透過以下方式聯繫我們：</p>
+            <ul>
+                <li><strong>電子郵件:</strong> <a href="mailto:info@animaladoption.org">info@animaladoption.org</a></li>
+                <li><strong>電話:</strong> (02) 1234-5678</li>
+                <li><strong>服務時間:</strong> 週一至週五，上午 9:00 - 下午 6:00</li>
+                <li><strong>地址:</strong> 台北市動物認領路 88 號</li>
+            </ul>
+            <p>我們也歡迎您透過以下社群媒體平台追蹤我們，獲取最新消息和待領養動物的資訊：</p>
+            <div class="social-links">
+                <a href="https://facebook.com" target="_blank">Facebook</a> |
+                <a href="https://instagram.com" target="_blank">Instagram</a> |
+                <a href="https://twitter.com" target="_blank">Twitter</a>
+            </div>
+            <p>期待您的來信與支持！</p>
+            <button type="button" class="btn-back" id="backFromContactBtn">返回首頁</button>
         </div>
     </section>
 
 </main>
 
-<footer>
-    <div class="container">
-        <p>&copy; 2024 動物認領平台. All rights reserved.</p>
-    </div>
-</footer>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 動物認領平台. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="/no/script.js"></script>
+
+</body>
+
+</html>
